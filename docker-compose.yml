@@ -1,0 +1,134 @@
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    restart: unless-stopped
+    command: ["start"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: "8080"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_HOSTNAME: ${KEYCLOAK_PUBLIC_URL}
+      KC_HOSTNAME_STRICT: "false"
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q \"200 OK\" <&3'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  keycloak-bootstrap:
+    image: quay.io/keycloak/keycloak:26.0.7
+    restart: "no"
+    entrypoint: ["/bin/bash", "/opt/bootstrap/bootstrap.sh"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      MANAGEMENT_CLIENT_SECRET: ${MANAGEMENT_CLIENT_SECRET}
+      ACCOUNT_MANAGEMENT_CLIENT_SECRET: ${ACCOUNT_MANAGEMENT_CLIENT_SECRET}
+      KEYCLOAK_REALM_SSL_REQUIRED: "NONE"
+      ACCOUNT_MANAGEMENT_REDIRECT_URI: http://localhost:5173/auth/callback
+      ACCOUNT_MANAGEMENT_WEB_ORIGIN: http://localhost:5173
+      ACCOUNT_MANAGEMENT_POST_LOGOUT_URI: http://localhost:5173/sign-in
+    volumes:
+      - ./infra/keycloak/bootstrap.sh:/opt/bootstrap/bootstrap.sh:ro
+      - ./infra/keycloak/realm.json:/opt/bootstrap/realm.json:ro
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+  account-db:
+    image: postgres:16.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: account_management
+      POSTGRES_USER: account_management
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - account-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  account-management:
+    image: project-sso-account-management:dev
+    build:
+      context: ./account-management
+      target: development
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://account_management:${POSTGRES_PASSWORD}@account-db:5432/account_management
+      OIDC_PUBLIC_ISSUER: ${KEYCLOAK_PUBLIC_URL}/realms/pondok
+      OIDC_INTERNAL_ISSUER: http://keycloak:8080/realms/pondok
+      OIDC_CLIENT_ID: account-management
+      OIDC_CLIENT_SECRET: ${ACCOUNT_MANAGEMENT_CLIENT_SECRET}
+      OIDC_REDIRECT_URI: http://localhost:5173/auth/callback
+      FRONTEND_URL: http://localhost:5173
+      FRONTEND_ORIGINS: http://localhost:5173,http://localhost:3000
+      SESSION_SECRET: ${SESSION_SECRET}
+      KEYCLOAK_ADMIN_ISSUER: http://keycloak:8080/realms/pondok
+      KEYCLOAK_ADMIN_CLIENT_ID: account-management-service
+      KEYCLOAK_ADMIN_CLIENT_SECRET: ${MANAGEMENT_CLIENT_SECRET}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./account-management:/app
+      - account-node-modules:/app/node_modules
+    depends_on:
+      account-db:
+        condition: service_healthy
+      keycloak-bootstrap:
+        condition: service_completed_successfully
+
+  frontend:
+    image: project-sso-frontend:dev
+    build:
+      context: ./frontend
+      target: development
+    restart: unless-stopped
+    environment:
+      VITE_DEV_API_PROXY_TARGET: http://account-management:3000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+    depends_on:
+      account-management:
+        condition: service_started
+
+volumes:
+  postgres-data:
+  account-data:
+  account-node-modules:
+  frontend-node-modules:

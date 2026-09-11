@@ -1,0 +1,13 @@
+{
+  "realm": "pondok",
+  "enabled": true,
+  "displayName": "Pondok Identity Platform",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "sslRequired": "NONE",
+  "attributes": {
+    "adminEventsDetailsEnabled": "true"
+  }
+}

@@ -1,0 +1,22 @@
+services:
+  keycloak:
+    ports:
+      - "8180:8080"
+      - "9100:9000"
+
+  account-management:
+    ports:
+      - "8300:3000"
+
+  frontend:
+    ports:
+      - "8173:80"
+
+  reverse-proxy:
+    profiles: ["production-only"]
+
+volumes:
+  postgres-data:
+    name: project-sso-staging-postgres-data
+  account-data:
+    name: project-sso-staging-account-data
