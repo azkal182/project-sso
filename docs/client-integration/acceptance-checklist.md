@@ -15,7 +15,10 @@
 - [ ] `state` dan `nonce` divalidasi.
 - [ ] Client tidak menyimpan password Pondok.
 - [ ] Login callback berhasil.
-- [ ] Logout berhasil.
+- [ ] Logout lokal menghapus session dan cookie aplikasi.
+- [ ] Logout penuh mengakhiri session Pondok dan kembali ke redirect URI exact.
+- [ ] Session expired dan refresh gagal mengarah ke login ulang.
+- [ ] `id_token` tidak diterima sebagai access token API.
 
 ## Token validation
 
@@ -24,6 +27,8 @@
 - [ ] Audience diverifikasi.
 - [ ] `exp`, `iat`, dan `nbf` diverifikasi.
 - [ ] `azp`/client ID diverifikasi.
+- [ ] Algorithm JWT dibatasi dan `kid`/JWKS rotation diuji.
+- [ ] `sub` digunakan sebagai identity key, bukan email.
 - [ ] Raw token tidak ditulis ke log.
 
 ## Authorization
@@ -35,6 +40,8 @@
 - [ ] Revoked membership menerima `403`.
 - [ ] Disabled user tidak dapat mengakses resource.
 - [ ] Backend menegakkan authorization tanpa bergantung pada frontend.
+- [ ] Cache authorization memiliki TTL dan tidak mengabaikan revocation.
+- [ ] `401` dan `403` diuji untuk seluruh negative cases.
 
 ## Existing auth
 
@@ -43,6 +50,7 @@
 - [ ] Account linking diaudit.
 - [ ] Logout behavior disepakati.
 - [ ] Session collision tidak terjadi.
+- [ ] Account linking memerlukan bukti penguasaan kedua identity.
 
 ## Operational
 
@@ -51,3 +59,6 @@
 - [ ] Redirect URI production tidak wildcard.
 - [ ] Error `401` dan `403` ditangani berbeda.
 - [ ] Runbook troubleshooting tersedia.
+- [ ] CSRF diuji untuk seluruh browser mutation dengan cookie session.
+- [ ] Client credentials service flow diuji bila digunakan.
+- [ ] Mobile redirect/deep-link dan secure token storage diuji bila digunakan.

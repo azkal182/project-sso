@@ -30,6 +30,10 @@ dan token ownership yang jelas.
 - Tidak, server menyimpan secret → gunakan confidential client.
 - Service-to-service tanpa user → gunakan client credentials.
 
+Access token dipakai untuk resource API; `id_token` tidak boleh diteruskan ke
+API. Native app harus memakai system browser dan secure OS storage. Aplikasi
+berbasis cookie/BFF harus menambahkan CSRF protection pada seluruh mutation.
+
 ## 3. Apakah API berada di backend yang sama?
 
 - Ya → gunakan server-side session atau BFF.
@@ -42,3 +46,4 @@ dan token ownership yang jelas.
 - Go web: server-side session Go.
 - React SPA: BFF jika tersedia; direct token hanya bila memang diperlukan.
 - API: validasi JWT lokal dengan JWKS, bukan introspection pada setiap request.
+- Service API: gunakan least-privilege scope/permission dan rotasi credential.

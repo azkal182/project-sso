@@ -43,6 +43,10 @@ Best practice:
 - jangan auto-link akun hanya berdasarkan email tanpa policy;
 - audit link, unlink, dan account takeover prevention;
 - verifikasi bahwa user menguasai kedua identity sebelum linking.
+- minta re-authentication atau approval eksplisit untuk link, unlink, dan
+  perubahan identity yang berisiko;
+- tetapkan prosedur saat identity Pondok disabled, email berubah, atau provider
+  tidak tersedia.
 
 ## Session dan logout
 

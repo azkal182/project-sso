@@ -20,6 +20,11 @@ refresh token secara langsung.
   deployment.
 - Validasi access token sebelum memanggil resource API.
 - Terapkan authorization server-side.
+- Lindungi seluruh mutation berbasis cookie dengan CSRF token dan gunakan
+  cookie `HttpOnly`, `Secure`, serta `SameSite` sesuai deployment.
+- Pisahkan `id_token` untuk identitas dari `access_token` untuk pemanggilan API.
+- Hapus session lokal jika refresh token gagal, user disabled, atau session
+  Pondok berakhir.
 
 ## React responsibilities
 
@@ -27,6 +32,8 @@ refresh token secara langsung.
 - Memanggil endpoint aplikasi sendiri dengan cookie.
 - Menampilkan state loading, unauthenticated, forbidden, dan error.
 - Tidak membaca atau menyimpan client secret.
+- Tidak menaruh token atau authorization code di log, URL, atau client-side
+  analytics.
 
 ## Cocok untuk
 

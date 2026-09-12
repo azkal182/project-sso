@@ -10,6 +10,8 @@ Client --> Laravel API
 
 Laravel API adalah resource server. Laravel tidak boleh hanya memeriksa bahwa
 header bearer ada atau bahwa token dapat di-decode tanpa verifikasi signature.
+API hanya menerima `access_token`; `id_token` adalah token identitas client dan
+harus ditolak untuk akses resource.
 
 ## Middleware responsibilities
 
@@ -34,3 +36,7 @@ Authorization: Bearer <access-token>
 Cache authorization secara singkat hanya jika revocation policy mengizinkan.
 Untuk data sensitif, lakukan resolution pada setiap request atau gunakan TTL
 yang sangat pendek.
+
+Saat JWKS menerima `kid` baru, refresh cache key secara aman. Untuk service
+client, validasi audience, `azp`, scope/permission, dan jangan mengharapkan
+subject user.

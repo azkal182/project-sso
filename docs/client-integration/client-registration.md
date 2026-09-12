@@ -12,6 +12,19 @@
 8. Tambahkan user sebagai member dan assign role.
 9. Uji token dan authorization endpoint.
 
+## Aturan berdasarkan client type
+
+- `web`: confidential client, Authorization Code + PKCE, redirect URI wajib,
+  secret hanya di server.
+- `mobile`: public client, Authorization Code + PKCE S256, redirect URI/deep
+  link wajib, tanpa secret.
+- `api`: resource server atau audience target, tanpa redirect URI dan tanpa
+  browser login.
+- `service`: Client Credentials, tanpa redirect URI, secret server-only.
+
+Direct Access Grants/password grant tidak digunakan. Untuk service client,
+batasi permission sesuai kebutuhan dan jangan memberi role platform-admin.
+
 ## Environment separation
 
 Gunakan client ID berbeda untuk local, staging, dan production:
@@ -42,3 +55,14 @@ lokal yang terkontrol.
 - Secret tidak boleh masuk Git, frontend bundle, log, atau issue tracker.
 - Gunakan rotation endpoint Account Management dan simpan secret baru hanya
   setelah berhasil dicatat oleh owner aplikasi.
+- Setelah rotasi, deploy konfigurasi baru sebelum mencabut secret lama agar
+  tidak terjadi outage; uji secret lama ditolak setelah grace period.
+
+## Negative cases yang wajib diuji
+
+- redirect URI berbeda satu karakter, hostname, port, path, atau trailing slash;
+- wildcard, fragment, atau redirect URI production berbasis HTTP;
+- client ID dari environment lain;
+- public client mengirim secret;
+- `api`/`service` mengirim redirect URI atau mencoba browser login;
+- client disabled atau secret lama setelah rotasi.

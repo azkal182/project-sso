@@ -31,6 +31,11 @@ memiliki authentication sendiri.
 - Client tidak boleh memanggil Keycloak Admin REST API secara langsung.
 - Client tidak boleh menyimpan client secret di browser atau mobile app.
 - JWT harus divalidasi signature, issuer, audience, expiry, dan not-before.
+- `id_token` hanya untuk identitas client; API hanya menerima `access_token`.
 - Role dari client/application lain tidak boleh dipercaya.
 - Access control harus ditegakkan lagi di backend/resource server.
 - Email bukan identity key permanen; gunakan `sub` sebagai external identity key.
+- Client harus memiliki prosedur logout, session expiry, secret rotation, dan
+  penanganan perubahan membership.
+- Jangan menulis authorization code, token, client secret, atau PKCE verifier ke
+  log.

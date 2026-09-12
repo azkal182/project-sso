@@ -39,6 +39,11 @@ team. Secret hanya berada di server/secret manager.
 
 ## Logout
 
-Logout minimal harus menghapus session Laravel. Jika membutuhkan single logout,
-redirect ke end-session endpoint Pondok dengan `post_logout_redirect_uri` yang
-telah terdaftar.
+Logout minimal harus menghapus session Laravel dan cookie aplikasi. Jika
+membutuhkan single logout, redirect ke OIDC end-session endpoint Pondok dengan
+`client_id`, optional `id_token_hint`, dan `post_logout_redirect_uri` yang telah
+terdaftar secara exact. Setelah callback/error logout, jangan menganggap user
+masih authenticated.
+
+Semua mutation berbasis cookie Laravel tetap memerlukan CSRF protection. Uji
+logout lokal, logout penuh, session expired, callback error, dan login ulang.

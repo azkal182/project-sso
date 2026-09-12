@@ -11,6 +11,11 @@ Resource server harus memvalidasi:
 5. `sub` tersedia.
 6. `azp` sesuai OAuth client yang terdaftar pada application. `azp` dan `aud` boleh berbeda ketika web/mobile client meminta token untuk API client dalam application yang sama.
 
+Gunakan hanya `access_token` untuk API. `id_token` tidak boleh diterima sebagai
+bearer token meskipun signature dan issuer-nya valid. Batasi algorithm yang
+diizinkan, validasi `kid`, dan gunakan JWKS cache yang dapat refresh saat
+Keycloak melakukan key rotation.
+
 Pseudo-code:
 
 ```text
@@ -60,7 +65,29 @@ Contoh response:
 ```
 
 `401` berarti token tidak ada atau tidak valid. `403` berarti token valid tetapi
-client, user, membership, atau authorization tidak sesuai.
+client, user, membership, atau authorization tidak sesuai. Gunakan response
+yang konsisten dan jangan membocorkan data lintas application.
+
+## Authorization cache dan perubahan akses
+
+Authorization harus dievaluasi ulang ketika membership, role, permission, atau
+status user berubah. Jika hasil authorization di-cache, gunakan TTL pendek,
+key yang mencakup subject dan application/client, dan invalidasi saat menerima
+event perubahan akses bila tersedia. Jangan menggunakan cache tanpa expiry untuk
+resource sensitif.
+
+## Negative cases
+
+Uji minimal:
+
+- token expired, malformed, signature salah, algorithm tidak diizinkan, atau
+  issuer salah;
+- `aud` atau `azp` berasal dari application lain;
+- token tanpa `sub`, `iat`, `nbf`, `exp`, `aud`, atau `azp`;
+- user disabled, membership revoked/disabled, role tidak di-assign, dan
+  permission tidak ter-resolve;
+- `id_token` dikirim ke endpoint API;
+- JWKS berganti `kid` dan resource server tetap dapat memvalidasi token baru.
 
 ## Security rule
 

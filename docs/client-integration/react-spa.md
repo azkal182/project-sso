@@ -19,6 +19,10 @@ browser.
 5. Panggil API dengan access token.
 6. Logout dari local session dan Pondok SSO sesuai kebutuhan.
 
+Gunakan `access_token` untuk API; jangan mengirim `id_token` sebagai bearer
+token. Saat callback gagal karena state/nonce mismatch, jangan membuat session
+dan mulai ulang flow secara aman.
+
 ## Best practice
 
 - Utamakan BFF/httpOnly cookie jika architecture memungkinkan.
@@ -27,6 +31,17 @@ browser.
 - Gunakan memory storage atau secure BFF session.
 - Tangani `401` dengan re-authentication dan `403` sebagai access denial.
 - Batasi redirect URI dan web origin.
+- Jangan menyimpan authorization code, access token, refresh token, atau
+  verifier di log, analytics, URL setelah callback, atau error tracker.
+- Jika SPA memakai BFF/cookie session, semua mutation wajib memakai CSRF
+  protection; `SameSite` bukan pengganti CSRF token.
+
+## Mobile/native note
+
+Untuk aplikasi native gunakan system browser dan PKCE S256. Gunakan universal
+link/app link jika tersedia; bila memakai custom scheme, pilih scheme yang
+dikendalikan aplikasi dan validasi state/nonce. Simpan token hanya di secure OS
+storage dan jangan menanamkan client secret.
 
 ## Minimal configuration
 
