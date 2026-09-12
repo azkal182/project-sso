@@ -79,11 +79,13 @@ services:
       OIDC_PUBLIC_ISSUER: ${KEYCLOAK_PUBLIC_URL}/realms/pondok
       OIDC_INTERNAL_ISSUER: http://keycloak:8080/realms/pondok
       OIDC_CLIENT_ID: account-management
+      OIDC_CLIENT_SECRET: ${ACCOUNT_MANAGEMENT_CLIENT_SECRET}
       OIDC_REDIRECT_URI: ${ACCOUNT_MANAGEMENT_PUBLIC_URL}/auth/callback
       FRONTEND_URL: ${ACCOUNT_MANAGEMENT_PUBLIC_URL}
       FRONTEND_ORIGINS: ${ACCOUNT_MANAGEMENT_PUBLIC_URL}
       KEYCLOAK_ADMIN_ISSUER: http://keycloak:8080/realms/pondok
       KEYCLOAK_ADMIN_CLIENT_ID: account-management-service
+      KEYCLOAK_ADMIN_CLIENT_SECRET: ${MANAGEMENT_CLIENT_SECRET}
     depends_on:
       account-db:
         condition: service_healthy
