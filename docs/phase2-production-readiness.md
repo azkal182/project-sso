@@ -118,6 +118,10 @@ docker compose --env-file .env.production \
 Konfigurasi Nginx host dan Cloudflare tersedia di
 [`docs/external-nginx-cloudflare.md`](external-nginx-cloudflare.md).
 
+Panduan deployment custom login theme Keycloak, termasuk build Tailwind dengan
+Bun, bootstrap realm existing, verifikasi, dan rollback tersedia di
+[`docs/production-keycloak-theme.md`](production-keycloak-theme.md).
+
 ### Acceptance criteria
 
 - [ ] Discovery Keycloak production dapat diakses melalui HTTPS.

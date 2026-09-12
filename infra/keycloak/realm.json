@@ -2,6 +2,7 @@
   "realm": "pondok",
   "enabled": true,
   "displayName": "Pondok Identity Platform",
+  "loginTheme": "pondok",
   "registrationAllowed": false,
   "resetPasswordAllowed": true,
   "rememberMe": true,

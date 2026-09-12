@@ -21,7 +21,9 @@ until bash -c 'exec 3<>/dev/tcp/keycloak/9000; printf "GET /health/ready HTTP/1.
 if ! /opt/keycloak/bin/kcadm.sh get realms/"${REALM}" >/dev/null 2>&1; then
   /opt/keycloak/bin/kcadm.sh create realms -f /opt/bootstrap/realm.json
 fi
-/opt/keycloak/bin/kcadm.sh update realms/"${REALM}" -s sslRequired="${KEYCLOAK_REALM_SSL_REQUIRED:-NONE}"
+/opt/keycloak/bin/kcadm.sh update realms/"${REALM}" \
+  -s sslRequired="${KEYCLOAK_REALM_SSL_REQUIRED:-NONE}" \
+  -s loginTheme=pondok
 if ! /opt/keycloak/bin/kcadm.sh get roles/platform-admin -r "${REALM}" >/dev/null 2>&1; then
   /opt/keycloak/bin/kcadm.sh create roles -r "${REALM}" -s name=platform-admin -s description="Pondok platform administrator"
 fi

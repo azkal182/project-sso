@@ -15,7 +15,10 @@ services:
       retries: 20
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.7
+    image: project-sso-keycloak:dev
+    build:
+      context: ./infra/keycloak
+      dockerfile: Dockerfile
     restart: unless-stopped
     command: ["start"]
     environment:
@@ -44,7 +47,7 @@ services:
       retries: 30
 
   keycloak-bootstrap:
-    image: quay.io/keycloak/keycloak:26.0.7
+    image: project-sso-keycloak:dev
     restart: "no"
     entrypoint: ["/bin/bash", "/opt/bootstrap/bootstrap.sh"]
     environment:

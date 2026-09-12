@@ -12,7 +12,10 @@ services:
       retries: 12
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.7
+    image: project-sso-keycloak:prod
+    build:
+      context: ./infra/keycloak
+      dockerfile: Dockerfile
     restart: always
     command: ["start"]
     env_file: ${PRODUCTION_ENV_FILE:-.env.production}
@@ -35,7 +38,7 @@ services:
         condition: service_healthy
 
   keycloak-bootstrap:
-    image: quay.io/keycloak/keycloak:26.0.7
+    image: project-sso-keycloak:prod
     restart: "no"
     entrypoint: ["/bin/bash", "/opt/bootstrap/bootstrap.sh"]
     env_file: ${PRODUCTION_ENV_FILE:-.env.production}
