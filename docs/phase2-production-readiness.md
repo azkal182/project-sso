@@ -4,6 +4,42 @@ Dokumen ini menyimpan task plan P2 untuk deployment Pondok Identity Platform
 pada satu VPS atau server. P2 berfokus pada deployment nyata, keamanan
 operasional, backup/recovery, monitoring, dan kesiapan pilot client.
 
+## Progress saat ini
+
+Status berikut adalah progress deployment VPS dengan Nginx existing dan
+Cloudflare. Checklist operasional yang belum diuji tetap dibiarkan pending.
+
+### Sudah lulus
+
+- [x] Docker Compose production tervalidasi.
+- [x] Keycloak, dua PostgreSQL, Account Management, dan frontend berjalan.
+- [x] Health check Keycloak, database, dan backend berhasil.
+- [x] Nginx existing berhasil meneruskan `sso` dan `admin` ke Docker.
+- [x] DNS Cloudflare, OIDC discovery, dan admin frontend berhasil diakses.
+- [x] Port project memakai loopback high ports `18080`–`18082`.
+- [x] Login, callback OIDC, dan pengujian frontend dinyatakan lulus.
+- [x] Role `platform-admin` pada realm `pondok` berhasil digunakan.
+- [x] Metrics dan `X-Request-ID` tersedia.
+
+### Masih pending
+
+- [ ] Backup dan restore kedua database.
+- [ ] Restart dan persistence test.
+- [ ] Firewall dan audit network exposure.
+- [ ] Monitoring, alerting, dan log retention.
+- [ ] Reconciliation PostgreSQL ↔ Keycloak.
+- [ ] Rollback image dan migration.
+- [ ] Final production readiness gate.
+
+### Accepted risk sementara
+
+- [ ] Cloudflare masih menggunakan `Flexible`, sehingga koneksi Cloudflare ke
+  origin VPS belum terenkripsi. Risiko, mitigasi firewall, owner, expiry, dan
+  rencana migrasi ke `Full (strict)` harus dicatat sebelum production sign-off.
+
+Phase 2 belum dinyatakan selesai sampai seluruh item pending memiliki evidence
+atau secara eksplisit disetujui sebagai accepted risk oleh owner deployment.
+
 ## Scope dan asumsi
 
 - Deployment menggunakan satu VPS/server.
@@ -61,6 +97,26 @@ docker compose --env-file .env.production \
 docker compose --env-file .env.production \
   -f docker-compose.prod.yml ps
 ```
+
+Untuk VPS yang sudah memiliki Nginx pada host, gunakan override berikut agar
+proxy bawaan tidak mengambil port `80/443`:
+
+```bash
+PRODUCTION_ENV_FILE=.env.production \
+docker compose --env-file .env.production \
+  -f docker-compose.prod.yml \
+  -f docker-compose.vps.yml \
+  config --quiet
+
+PRODUCTION_ENV_FILE=.env.production \
+docker compose --env-file .env.production \
+  -f docker-compose.prod.yml \
+  -f docker-compose.vps.yml \
+  up -d --build
+```
+
+Konfigurasi Nginx host dan Cloudflare tersedia di
+[`docs/external-nginx-cloudflare.md`](external-nginx-cloudflare.md).
 
 ### Acceptance criteria
 
