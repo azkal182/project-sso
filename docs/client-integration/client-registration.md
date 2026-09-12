@@ -45,8 +45,9 @@ Gunakan URI exact:
 https://attendance.example.com/auth/callback
 ```
 
-Hindari wildcard di production. Wildcard hanya untuk kebutuhan development
-lokal yang terkontrol.
+Hindari wildcard di production. HTTP hanya diperbolehkan untuk loopback lokal
+(`localhost`, `127.0.0.1`, atau `[::1]`) pada port valid apa pun untuk kebutuhan
+development. Domain publik tetap wajib HTTPS.
 
 ## Secret handling
 

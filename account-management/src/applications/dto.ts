@@ -1,5 +1,8 @@
 import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsOptional, IsString, IsUUID, Length, Matches, Validate, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 
+const loopbackHosts = new Set(['localhost', '127.0.0.1', '[::1]']);
+const isLoopbackHttp = (parsed: URL) => parsed.protocol === 'http:' && loopbackHosts.has(parsed.hostname);
+
 @ValidatorConstraint({ name: 'oauthClientConfig', async: false })
 class OAuthClientConfigConstraint implements ValidatorConstraintInterface {
   validate(_: unknown, args: ValidationArguments) {
@@ -14,12 +17,12 @@ class OAuthClientConfigConstraint implements ValidatorConstraintInterface {
       for (const uri of redirects) {
         const parsed = new URL(uri);
         if (value.clientType !== 'mobile' && !['http:', 'https:'].includes(parsed.protocol)) return false;
-        if (parsed.protocol === 'http:' && (process.env.NODE_ENV === 'production' || !['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname))) return false;
+        if (parsed.protocol === 'http:' && !isLoopbackHttp(parsed)) return false;
       }
       for (const origin of origins) {
         const parsed = new URL(origin);
         if (!['http:', 'https:'].includes(parsed.protocol) || parsed.pathname !== '/' || parsed.search || parsed.hash) return false;
-        if (parsed.protocol === 'http:' && (process.env.NODE_ENV === 'production' || !['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname))) return false;
+        if (parsed.protocol === 'http:' && !isLoopbackHttp(parsed)) return false;
       }
       return true;
     } catch { return false; }
@@ -36,7 +39,7 @@ class OAuthClientUpdateConfigConstraint implements ValidatorConstraintInterface 
       return values.every((item) => {
         if (item.includes('*') || item.includes('#')) return false;
         const parsed = new URL(item);
-        return parsed.protocol !== 'http:' || (process.env.NODE_ENV !== 'production' && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname));
+        return parsed.protocol !== 'http:' || isLoopbackHttp(parsed);
       });
     } catch { return false; }
   }

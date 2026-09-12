@@ -52,3 +52,7 @@ VITE_API_URL=https://api.example.com
 ```
 
 `VITE_*` values dianggap public. Jangan menaruh secret di dalamnya.
+
+Untuk pengujian lokal, callback HTTP pada `localhost`, `127.0.0.1`, atau `[::1]`
+dengan port valid apa pun diperbolehkan. Gunakan client ID local terpisah dan
+jangan memakai callback loopback pada client production yang digunakan publik.

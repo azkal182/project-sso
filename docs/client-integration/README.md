@@ -14,6 +14,18 @@ memiliki authentication sendiri.
    [token-and-authorization.md](token-and-authorization.md).
 5. Jalankan [acceptance-checklist.md](acceptance-checklist.md).
 
+Sebelum client application dibuat, jalankan preflight terhadap client yang
+telah diregistrasikan. Script meminta access token secara hidden, tidak mencetak
+token, dan menguji OIDC discovery, health, negative authentication, serta
+authorization contract:
+
+```bash
+bash tests/client_preflight.sh
+```
+
+Access token hanya dipakai lokal selama script berjalan. Jangan menyalin token,
+session cookie, atau client secret ke issue tracker maupun chat.
+
 ## Panduan berdasarkan teknologi
 
 - React SPA: [react-spa.md](react-spa.md)
