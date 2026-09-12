@@ -42,6 +42,31 @@ bash tests/phase2_smoke.sh
 bash tests/phase3_smoke.sh
 ```
 
+### Seed data untuk browser testing
+
+Gunakan seed Bun di dalam container untuk menyiapkan user, application, OAuth
+client, role, permission, dan membership uji secara idempotent. Seed memakai
+Keycloak Admin REST dan Drizzle, bukan insert PostgreSQL manual:
+
+```bash
+SEED_ENABLED=true \
+SEED_USERNAME=seed-browser-admin \
+SEED_PASSWORD='use-a-local-password-at-least-12-chars' \
+docker compose --env-file .env up -d keycloak-bootstrap
+
+docker compose run --rm --no-deps \
+  -e SEED_USERNAME=seed-browser-admin \
+  -e SEED_PASSWORD='use-a-local-password-at-least-12-chars' \
+  -e SEED_APPLICATION_CODE=seed-browser-app \
+  -e SEED_CLIENT_ID=seed-browser-web \
+  account-management bun run seed
+```
+
+Dengan `SEED_ENABLED=true`, bootstrap Keycloak membuat user seed dan memberi
+role `platform-admin` untuk full browser testing. Jalankan langkah bootstrap
+terlebih dahulu, lalu jalankan command seed aplikasi. Seed hanya diizinkan pada
+environment non-production. Detail tersedia di `infra/seed/README.md`.
+
 Bootstrap bersifat aman untuk dijalankan ulang. Untuk mengulang dari database kosong, hentikan environment dan hapus volume project secara eksplisit setelah memastikan data boleh dihapus:
 
 ```bash

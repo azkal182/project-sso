@@ -56,6 +56,9 @@ services:
       ACCOUNT_MANAGEMENT_REDIRECT_URI: http://localhost:5173/auth/callback
       ACCOUNT_MANAGEMENT_WEB_ORIGIN: http://localhost:5173
       ACCOUNT_MANAGEMENT_POST_LOGOUT_URI: http://localhost:5173/sign-in
+      SEED_ENABLED: ${SEED_ENABLED:-false}
+      SEED_USERNAME: ${SEED_USERNAME:-}
+      SEED_PASSWORD: ${SEED_PASSWORD:-}
     volumes:
       - ./infra/keycloak/bootstrap.sh:/opt/bootstrap/bootstrap.sh:ro
       - ./infra/keycloak/realm.json:/opt/bootstrap/realm.json:ro
@@ -99,6 +102,10 @@ services:
       KEYCLOAK_ADMIN_ISSUER: http://keycloak:8080/realms/pondok
       KEYCLOAK_ADMIN_CLIENT_ID: account-management-service
       KEYCLOAK_ADMIN_CLIENT_SECRET: ${MANAGEMENT_CLIENT_SECRET}
+      SEED_USERNAME: ${SEED_USERNAME:-seed-browser-user}
+      SEED_PASSWORD: ${SEED_PASSWORD:-SeedBrowserUser@1234}
+      SEED_APPLICATION_CODE: ${SEED_APPLICATION_CODE:-seed-browser-app}
+      SEED_CLIENT_ID: ${SEED_CLIENT_ID:-seed-browser-web}
     ports:
       - "3000:3000"
     volumes:

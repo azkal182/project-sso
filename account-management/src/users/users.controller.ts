@@ -48,6 +48,7 @@ export class UsersController {
       return local[0];
     } catch (error: any) {
       await this.keycloak.deleteUser(keycloakUserId).catch(() => undefined);
+      await db.delete(users).where(eq(users.keycloakUserId, keycloakUserId)).catch(() => undefined);
       if (error?.code === '23505') throw new ConflictException('User already exists');
       throw error;
     }

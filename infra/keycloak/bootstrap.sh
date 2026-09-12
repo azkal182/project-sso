@@ -84,5 +84,24 @@ for role in manage-users view-users query-users manage-clients view-clients quer
     --rolename "${role}"
 done
 
+if [[ "${SEED_ENABLED:-false}" == "true" ]]; then
+  : "${SEED_USERNAME:?SEED_USERNAME is required when SEED_ENABLED=true}"
+  : "${SEED_PASSWORD:?SEED_PASSWORD is required when SEED_ENABLED=true}"
+  seed_user_id="$(/opt/keycloak/bin/kcadm.sh get users -r "${REALM}" -q username="${SEED_USERNAME}" --fields id --format csv --noquotes | head -n 1 || true)"
+  if [[ -z "${seed_user_id}" ]]; then
+    /opt/keycloak/bin/kcadm.sh create users -r "${REALM}" \
+      -s username="${SEED_USERNAME}" \
+      -s enabled=true \
+      -s email="${SEED_USERNAME}@example.test" \
+      -s emailVerified=true \
+      -s firstName=Seed \
+      -s lastName="Browser User"
+    seed_user_id="$(/opt/keycloak/bin/kcadm.sh get users -r "${REALM}" -q username="${SEED_USERNAME}" --fields id --format csv --noquotes | head -n 1)"
+  fi
+  /opt/keycloak/bin/kcadm.sh set-password -r "${REALM}" --userid "${seed_user_id}" --new-password "${SEED_PASSWORD}"
+  /opt/keycloak/bin/kcadm.sh add-roles -r "${REALM}" --uusername "${SEED_USERNAME}" --rolename platform-admin
+  echo "Seed user '${SEED_USERNAME}' is ready for browser testing."
+fi
+
 echo "Keycloak realm '${REALM}' and clients are ready."
 echo "Runtime management uses '${SERVICE_CLIENT}' service-account roles; bootstrap admin is not used by applications."

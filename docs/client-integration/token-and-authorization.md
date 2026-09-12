@@ -6,10 +6,10 @@ Resource server harus memvalidasi:
 
 1. Signature menggunakan JWKS dari discovery.
 2. `iss` sama persis dengan issuer Pondok.
-3. `aud` sesuai API/client yang dituju.
+3. `aud` sesuai API/client yang dituju dan terdaftar pada application.
 4. `exp`, `iat`, dan `nbf`.
 5. `sub` tersedia.
-6. `azp` sesuai OAuth client yang terdaftar.
+6. `azp` sesuai OAuth client yang terdaftar pada application. `azp` dan `aud` boleh berbeda ketika web/mobile client meminta token untuk API client dalam application yang sama.
 
 Pseudo-code:
 

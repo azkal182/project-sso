@@ -103,7 +103,7 @@ After restore, run the smoke tests and the reconciliation report before serving 
 
 ## Reconciliation
 
-`ops/reconcile.sh` is a read-only report for local user references and OAuth-client mappings whose Keycloak resource is missing. Run it with a runtime service-account secret and a database connection string. Investigate and repair drift through Account Management or an approved maintenance procedure; never edit Keycloak tables directly.
+`ops/reconcile.sh` is a read-only two-way report for local user/client references whose Keycloak resource is missing and Keycloak users/clients without a local mapping. It excludes platform-owned management clients and Keycloak’s built-in clients. Run it with a runtime service-account secret and a database connection string. Investigate and repair drift through Account Management or an approved maintenance procedure; never edit Keycloak tables directly.
 
 ## Upgrade and rotation
 

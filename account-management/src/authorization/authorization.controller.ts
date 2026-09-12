@@ -4,6 +4,16 @@ import { db } from '../db/database';
 import { applicationMemberships, applicationOauthClients, applications, membershipRoles, permissions, rolePermissions, roles, users } from '../db/schema';
 import { BearerTokenGuard } from '../auth/bearer.guard';
 
+export function resolveApplicationClient(clients: { clientId: string }[], claims: { azp?: unknown; aud?: unknown }) {
+  const clientId = claims.azp;
+  const audience = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
+  if (typeof clientId !== 'string' || !clientId) throw new ForbiddenException('Token client is missing');
+  const client = clients.find((candidate) => candidate.clientId === clientId);
+  if (!client) throw new ForbiddenException('Token client is not registered for this application');
+  if (!audience.some((value) => typeof value === 'string' && clients.some((candidate) => candidate.clientId === value))) throw new ForbiddenException('Token audience is not registered for this application');
+  return client;
+}
+
 @Controller('api/applications')
 @UseGuards(BearerTokenGuard)
 export class AuthorizationController {
@@ -13,12 +23,10 @@ export class AuthorizationController {
     if (!application) throw new NotFoundException('Application not found');
     const claims: any = req.tokenClaims;
     const subject = claims.sub;
-    if (!subject) throw new ForbiddenException('Token subject is missing');
-    const audience = Array.isArray(claims.aud) ? claims.aud : claims.aud ? [claims.aud] : [];
-    const clientId = claims.azp || audience.find((value: unknown) => typeof value === 'string' && value !== process.env.OIDC_CLIENT_ID);
-    if (!clientId) throw new ForbiddenException('Token client is missing');
-    const client = (await db.select().from(applicationOauthClients).where(and(eq(applicationOauthClients.applicationId, id), eq(applicationOauthClients.clientId, clientId))))[0];
-    if (!client) throw new ForbiddenException('Token client is not registered for this application');
+    const clientId = claims.azp;
+    if (typeof subject !== 'string' || !subject) throw new ForbiddenException('Token subject is missing');
+    const clients = await db.select().from(applicationOauthClients).where(eq(applicationOauthClients.applicationId, id));
+    const client = resolveApplicationClient(clients, claims);
     const localUser = (await db.select().from(users).where(eq(users.keycloakUserId, subject)))[0];
     if (!localUser || localUser.status !== 'active') throw new ForbiddenException('User is not active');
     const membership = (await db.select().from(applicationMemberships).where(and(eq(applicationMemberships.applicationId, id), eq(applicationMemberships.userId, localUser.id))))[0];
