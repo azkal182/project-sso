@@ -188,7 +188,7 @@ Salin `.env.production.example` menjadi `.env.production`, isi dari secret manag
 docker compose --env-file .env.production -f docker-compose.prod.yml up -d
 ```
 
-Untuk prosedur lengkap deployment, backup/restore, reconciliation, upgrade, dan rotasi secret, lihat [docs/production-operations.md](docs/production-operations.md). Rotasi bootstrap admin setelah provisioning dan jangan gunakan credential tersebut sebagai runtime credential.
+Untuk prosedur lengkap deployment, backup/restore, reconciliation, upgrade, dan rotasi secret, lihat [docs/production-operations.md](docs/production-operations.md). Jika VPS sudah memiliki Nginx dan Cloudflare, gunakan [panduan external Nginx](docs/external-nginx-cloudflare.md). Rotasi bootstrap admin setelah provisioning dan jangan gunakan credential tersebut sebagai runtime credential.
 
 ## Verification
 

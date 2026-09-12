@@ -12,6 +12,9 @@ operasional, backup/recovery, monitoring, dan kesiapan pilot client.
 - Tidak ada Redis atau distributed session/rate limiter pada tahap ini.
 - Downtime singkat saat deployment dapat diterima melalui maintenance window.
 - Backup database wajib disimpan di luar VPS.
+- Jika Nginx sudah tersedia di VPS, gunakan host Nginx dan
+  `docker-compose.vps.yml`; jangan mengambil alih port `80/443` dengan proxy
+  container project.
 
 ## Arsitektur target
 
@@ -66,6 +69,8 @@ docker compose --env-file .env.production \
 - [ ] Backend `/health` mengembalikan `{"status":"UP"}`.
 - [ ] Bootstrap admin tidak digunakan sebagai runtime credential.
 - [ ] Port database, management, dan backend internal tidak public.
+- [ ] Jika memakai Nginx existing, service project hanya bind ke loopback
+  high ports dan tidak konflik dengan aplikasi lain.
 
 ## P2.2 — Secret dan configuration management
 
@@ -94,6 +99,10 @@ docker compose --env-file .env.production \
 - [ ] Redirect HTTP ke HTTPS.
 - [ ] Pastikan secure cookie aktif.
 - [ ] Batasi firewall ke port 80/443 dan SSH administrator.
+- [ ] Gunakan Cloudflare `Full (strict)` dan origin certificate/sertifikat valid.
+- [ ] Konfigurasikan Nginx host dengan `Host`, `X-Forwarded-Proto`, dan
+  `X-Forwarded-For` yang benar.
+- [ ] Percayai `CF-Connecting-IP` hanya dari range IP Cloudflare resmi.
 - [ ] Jangan expose PostgreSQL ke public internet.
 - [ ] Jangan expose Keycloak port `9000` ke public internet.
 - [ ] Batasi Keycloak Admin Console ke private network.
@@ -104,6 +113,8 @@ docker compose --env-file .env.production \
 - [ ] TLS certificate valid dan hostname sesuai.
 - [ ] Certificate expiry dipantau.
 - [ ] Port internet hanya yang diperlukan.
+- [ ] Port project hanya listen pada `127.0.0.1` atau jaringan private.
+- [ ] Deployment tidak mengganggu aplikasi lain yang sudah berjalan di VPS.
 - [ ] Request HTTP diarahkan ke HTTPS.
 - [ ] Cookie session memiliki `HttpOnly` dan `Secure`.
 

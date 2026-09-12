@@ -1,0 +1,16 @@
+services:
+  # The VPS host already owns ports 80/443 through its existing Nginx.
+  reverse-proxy:
+    profiles: ["embedded-proxy"]
+
+  keycloak:
+    ports:
+      - "127.0.0.1:18080:8080"
+
+  account-management:
+    ports:
+      - "127.0.0.1:18082:3000"
+
+  frontend:
+    ports:
+      - "127.0.0.1:18081:80"

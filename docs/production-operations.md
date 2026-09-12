@@ -11,6 +11,12 @@ Keycloak port `9000` is an internal management interface only. It is not publish
 
 TLS terminates at Nginx. Mount the certificate and key at `deploy/tls/tls.crt` and `deploy/tls/tls.key` from a secret manager or certificate automation system. Do not commit certificates or private keys.
 
+If the VPS already has Nginx serving other applications, use
+[`docs/external-nginx-cloudflare.md`](external-nginx-cloudflare.md) and
+`docker-compose.vps.yml`. In that mode the host Nginx owns ports `80/443`, the
+embedded `reverse-proxy` is disabled, and project services use loopback high
+ports (`18080`–`18082`). Do not run the default production Compose file alone.
+
 ## Deployment
 
 1. Copy `.env.production.example` to `.env.production`.
