@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "bun@1.4.0",
   "scripts": {
-    "build": "bunx @tailwindcss/cli -i themes/pondok/login/resources/css/tailwind.css -o themes/pondok/login/resources/css/login.css --minify"
+    "build": "bun x @tailwindcss/cli -i ../themes/pondok/login/resources/css/tailwind.css -o ../themes/pondok/login/resources/css/login.css --minify"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.2.2",

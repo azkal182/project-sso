@@ -9,6 +9,7 @@
 
 # Local dependencies and generated output
 **/node_modules/
+infra/keycloak/themes/pondok/login/resources/css/login.css
 **/dist/
 **/coverage/
 **/.turbo/

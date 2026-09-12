@@ -1,150 +1,197 @@
-@import "tailwindcss";
+@import "../../../../../theme/node_modules/tailwindcss/index.css" source(none);
 
 @source "../../";
 
 :root {
-  --pondok-navy: #102a43;
-  --pondok-blue: #1d4ed8;
-  --pondok-gold: #d4a72c;
-  --pondok-ink: #102a43;
-  --pondok-muted: #627d98;
+  --pondok-teal-950: #0f3d3a;
+  --pondok-teal-900: #134e4a;
+  --pondok-teal-800: #115e59;
+  --pondok-teal-700: #0f766e;
+  --pondok-teal-600: #0d9488;
+  --pondok-teal-100: #ccfbf1;
+  --pondok-teal-50: #f0fdfa;
+  --pondok-ink: #172b2a;
+  --pondok-muted: #617271;
+  --pondok-border: #d9e5e3;
   --pondok-surface: #ffffff;
-  --pondok-background: #f4f8fc;
+  --pondok-background: #f6faf9;
 }
-
-body {
+html.login-pf,
+html.login-pf body#keycloak-bg {
   min-width: 320px;
-  color-scheme: light;
+  min-height: 100%;
+  margin: 0;
   background: var(--pondok-background);
   color: var(--pondok-ink);
+  color-scheme: light;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-html,
-body,
-.login-pf-page,
-.login-pf-page .container-fluid,
-.login-pf-page .row,
-#kc-content-wrapper {
-  min-height: 100%;
-  background: var(--pondok-background);
+.pf-v5-c-login {
+  display: block !important;
+  min-height: 100vh !important;
+  padding: 0 !important;
+  background: var(--pondok-background) !important;
 }
 
+.pf-v5-c-login__container {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.pf-v5-c-login__main {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.pf-v5-c-login__main-header,
+.pf-v5-c-login__main-footer,
 #kc-header,
 #kc-header-wrapper,
-.login-pf-page .card-pf,
 #kc-page-title {
-  display: none;
+  display: none !important;
+}
+
+.pf-v5-c-login__main-body {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 #kc-content,
 #kc-content-wrapper {
-  width: 100%;
-  margin: 0;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .pondok-shell {
   display: grid;
+  width: 100%;
   min-height: 100vh;
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 560px);
-  overflow: hidden;
+  grid-template-columns: minmax(420px, 46%) minmax(0, 1fr);
+  background: var(--pondok-surface);
 }
 
 .pondok-brand-panel {
-  position: relative;
   display: flex;
   min-height: 100vh;
-  align-items: flex-end;
-  overflow: hidden;
-  background: linear-gradient(145deg, #0b2239 0%, #163f68 58%, #1d4ed8 100%);
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--pondok-teal-900);
   color: white;
-  padding: clamp(2rem, 6vw, 6rem);
+  padding: clamp(2rem, 4.5vw, 4.75rem);
 }
 
-.pondok-brand-panel::before,
-.pondok-brand-panel::after {
-  position: absolute;
-  border: 1px solid rgb(255 255 255 / 14%);
+.pondok-wordmark {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  color: rgb(255 255 255 / 76%);
+  font-size: .73rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.pondok-wordmark-divider {
+  width: 3px;
+  height: 3px;
   border-radius: 9999px;
-  content: "";
-}
-
-.pondok-brand-panel::before {
-  width: 34rem;
-  height: 34rem;
-  right: -14rem;
-  top: -10rem;
-}
-
-.pondok-brand-panel::after {
-  width: 25rem;
-  height: 25rem;
-  right: -8rem;
-  top: -5rem;
+  background: #5eead4;
 }
 
 .pondok-brand-content {
-  position: relative;
-  z-index: 1;
-  max-width: 38rem;
+  max-width: 34rem;
+  margin-block: 4rem;
 }
 
 .pondok-eyebrow {
   margin: 0 0 1.25rem;
-  color: #f5d778;
-  font-size: .75rem;
+  color: #99f6e4;
+  font-size: .73rem;
   font-weight: 700;
-  letter-spacing: .18em;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
 
 .pondok-brand-title {
+  max-width: 31rem;
   margin: 0;
   color: white;
-  font-size: clamp(2.2rem, 4.8vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -.04em;
-  line-height: 1.05;
+  font-size: clamp(2.35rem, 4vw, 4.25rem);
+  font-weight: 650;
+  letter-spacing: -.045em;
+  line-height: 1.06;
 }
 
 .pondok-brand-description {
-  max-width: 34rem;
+  max-width: 31rem;
   margin: 1.5rem 0 0;
-  color: rgb(255 255 255 / 78%);
-  font-size: 1.05rem;
+  color: rgb(255 255 255 / 72%);
+  font-size: 1rem;
   line-height: 1.75;
+}
+
+.pondok-brand-footer {
+  color: rgb(255 255 255 / 52%);
+  font-size: .75rem;
+  letter-spacing: .04em;
 }
 
 .pondok-form-panel {
   display: flex;
+  min-width: 0;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.5rem, 5vw, 4rem);
+  box-sizing: border-box;
+  background: var(--pondok-surface);
+  padding: clamp(2rem, 6vw, 6rem);
 }
 
 .pondok-form-card {
-  width: min(100%, 390px);
+  width: min(100%, 420px);
 }
 
-.pondok-logo {
-  width: 3.5rem;
-  height: 3.5rem;
-  margin-bottom: 1.5rem;
+.pondok-mobile-brand {
+  display: none;
+}
+
+.pondok-platform-label {
+  margin: 0 0 .8rem;
+  color: var(--pondok-teal-700);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .pondok-form-title {
   margin: 0;
-  color: var(--pondok-navy);
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -.025em;
+  color: var(--pondok-ink);
+  font-size: clamp(1.75rem, 2.4vw, 2.15rem);
+  font-weight: 650;
+  letter-spacing: -.035em;
+  line-height: 1.2;
 }
 
 .pondok-form-subtitle {
-  margin: .6rem 0 2rem;
+  margin: .7rem 0 2rem;
   color: var(--pondok-muted);
   font-size: .95rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .pondok-field {
@@ -153,103 +200,198 @@ body,
 
 .pondok-field label {
   display: block;
-  margin-bottom: .45rem;
+  margin-bottom: .5rem;
   color: var(--pondok-ink);
-  font-size: .84rem;
-  font-weight: 600;
+  font-size: .82rem;
+  font-weight: 650;
 }
 
 .pondok-field input {
   width: 100%;
+  min-height: 48px;
   box-sizing: border-box;
-  border: 1px solid #d9e2ec;
-  border-radius: .7rem;
+  border: 1px solid var(--pondok-border);
+  border-radius: .6rem;
   background: var(--pondok-surface);
   color: var(--pondok-ink);
-  font-size: .95rem;
+  font-size: 1rem;
   outline: none;
-  padding: .85rem 1rem;
-  transition: border-color .2s, box-shadow .2s;
+  padding: .75rem .9rem;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+
+.pondok-field input:hover {
+  border-color: #9eb8b4;
 }
 
 .pondok-field input:focus {
-  border-color: var(--pondok-blue);
-  box-shadow: 0 0 0 3px rgb(29 78 216 / 13%);
+  border-color: var(--pondok-teal-700);
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 13%);
 }
 
 .pondok-form-options {
   display: flex;
+  min-height: 1.5rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin: .4rem 0 1.5rem;
+  margin: .35rem 0 1.5rem;
   color: var(--pondok-muted);
   font-size: .82rem;
 }
 
-.pondok-form-options a,
-.pondok-link {
-  color: var(--pondok-blue);
-  font-weight: 600;
+.pondok-form-options a {
+  color: var(--pondok-teal-700);
+  font-weight: 650;
   text-decoration: none;
 }
 
-.pondok-form-options a:hover,
-.pondok-link:hover {
+.pondok-form-options a:hover {
+  color: var(--pondok-teal-900);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .pondok-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: .45rem;
+  gap: .5rem;
+  cursor: pointer;
 }
 
 .pondok-checkbox input {
-  accent-color: var(--pondok-blue);
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--pondok-teal-700);
 }
 
 .pondok-submit {
   width: 100%;
+  min-height: 48px;
   border: 0;
-  border-radius: .7rem;
-  background: var(--pondok-blue);
-  box-shadow: 0 8px 18px rgb(29 78 216 / 20%);
+  border-radius: .6rem;
+  background: var(--pondok-teal-700);
   color: white;
   cursor: pointer;
-  font-size: .95rem;
+  font-size: .92rem;
   font-weight: 700;
-  padding: .9rem 1rem;
-  transition: background .2s, transform .2s;
+  padding: .8rem 1rem;
+  transition: background .16s ease, box-shadow .16s ease, transform .16s ease;
 }
 
 .pondok-submit:hover {
-  background: #1e40af;
+  background: var(--pondok-teal-800);
+  box-shadow: 0 8px 20px rgb(15 118 110 / 18%);
   transform: translateY(-1px);
 }
 
+.pondok-submit:focus-visible {
+  outline: 3px solid rgb(13 148 136 / 26%);
+  outline-offset: 3px;
+}
+
 .pondok-footer {
-  margin-top: 2rem;
-  color: var(--pondok-muted);
-  font-size: .75rem;
-  line-height: 1.6;
-  text-align: center;
+  margin: 2rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e7efed;
+  color: #71817f;
+  font-size: .74rem;
+  line-height: 1.65;
 }
 
 .alert-error,
 .alert-warning,
 .alert-success,
 .alert-info {
-  border-radius: .65rem;
-  font-size: .85rem;
-  margin-bottom: 1.2rem;
-  padding: .75rem .9rem;
+  box-sizing: border-box;
+  border: 1px solid;
+  border-radius: .6rem;
+  margin: 0 0 1.25rem;
+  font-size: .84rem;
+  line-height: 1.5;
+  padding: .8rem .9rem;
 }
 
-@media (max-width: 800px) {
-  .pondok-shell { grid-template-columns: 1fr; }
-  .pondok-brand-panel { min-height: auto; padding: 2rem 1.5rem; }
-  .pondok-brand-title { font-size: 2.25rem; }
-  .pondok-brand-description { margin-top: 1rem; font-size: .92rem; }
-  .pondok-form-panel { padding: 2.5rem 1.5rem; }
+.alert-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.alert-warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.alert-success {
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.alert-info {
+  border-color: #99f6e4;
+  background: var(--pondok-teal-50);
+  color: var(--pondok-teal-900);
+}
+
+@media (max-width: 900px) {
+  .pondok-shell {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .pondok-brand-panel {
+    display: none;
+  }
+
+  .pondok-form-panel {
+    min-height: 100vh;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .pondok-form-card {
+    width: 100%;
+    max-width: 460px;
+    box-sizing: border-box;
+    padding: 2rem 1.5rem 2.5rem;
+  }
+
+  .pondok-mobile-brand {
+    display: block;
+    margin: -2rem -1.5rem 2.5rem;
+    border-bottom: 1px solid #b9ddd7;
+    background: var(--pondok-teal-50);
+    color: var(--pondok-teal-900);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .pondok-mobile-brand-name {
+    display: block;
+    font-size: .8rem;
+    font-weight: 750;
+    letter-spacing: .04em;
+  }
+
+  .pondok-mobile-brand-location {
+    display: block;
+    margin-top: .2rem;
+    color: var(--pondok-teal-700);
+    font-size: .7rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .pondok-form-options {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  .pondok-form-title {
+    font-size: 1.7rem;
+  }
 }

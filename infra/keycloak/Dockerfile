@@ -1,10 +1,10 @@
 FROM oven/bun:1.4.0-alpine AS theme-builder
 
-WORKDIR /build
-COPY theme/package.json ./
-RUN bun install --no-progress
+WORKDIR /build/theme
+COPY theme/package.json theme/bun.lock ./
+RUN bun install --frozen-lockfile --no-progress
 
-COPY themes/pondok ./themes/pondok
+COPY themes/pondok /build/themes/pondok
 RUN bun run build
 
 FROM quay.io/keycloak/keycloak:26.0.7
